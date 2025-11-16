@@ -12,22 +12,31 @@ class Main extends React.Component {
   }
 
   async componentDidMount() {
-    const response = await fetch(
-      `http://www.omdbapi.com/?i=tt3896198&apikey=${API_KEY}&s=iron`
-    )
-    const res = await response.json()
-    this.setState({ movies: res.Search, loading: false })
+    try {
+      const response = await fetch(
+        `https://www.omdbapi.com/?i=tt3896198&apikey=${API_KEY}&s=iron`
+      )
+      const res = await response.json()
+      this.setState({ movies: res.Search, loading: false })
+    } catch (err) {
+      console.error(err)
+      this.setState({ loading: false })
+    }
   }
 
   searchMovies = (str, type = "all") => {
     this.setState({ loading: true })
     fetch(
-      `http://www.omdbapi.com/?i=tt3896198&apikey=${API_KEY}&s=${str}${
+      `https://www.omdbapi.com/?i=tt3896198&apikey=${API_KEY}&s=${str}${
         type !== "all" ? `&type=${type}` : ""
       }`
     )
       .then((response) => response.json())
       .then((res) => this.setState({ movies: res.Search, loading: false }))
+      .catch((err) => {
+        console.error(err)
+        this.setState({ loading: false })
+      })
   }
 
   render() {
